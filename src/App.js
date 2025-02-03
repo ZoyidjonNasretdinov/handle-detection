@@ -6,11 +6,19 @@ import Webcam from 'react-webcam'
 
 
 const App = () => {
+  const webcamRef = useRef(null)
+  const canvasRef = useRef(null)
+
+  const runHandpose = async () => {
+    const net = await handPose.load()
+  }
+
+
   return (
     <div className='App'>
       <header className='App-header'>
-        <Webcam className='webcam' />
-        <canvas className='canvas'/>
+        <Webcam ref={webcamRef} className='webcam' />
+        <canvas ref={canvasRef} className='canvas'/>
       </header>
     </div>
   )
