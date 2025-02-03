@@ -5,7 +5,7 @@ const fingerJoints = {
   middleFinger: [0, 9, 10, 11, 12],
   ringFinger: [0, 13, 14, 15, 16],
   pinky: [0, 17, 18, 19, 20],
-}
+};
 
 // Infinity Gauntlet Style
 const style = {
@@ -30,50 +30,37 @@ const style = {
   18: { color: 'gold', size: 6 },
   19: { color: 'gold', size: 6 },
   20: { color: 'gold', size: 6 },
-}
+};
 
 export const drawHand = (predictions, ctx) => {
   if (predictions.length > 0) {
-    predictions.forEach((prediction) => {
-      const landmarks = prediction.landmarks
+    predictions.forEach((prediction, index) => {
+      const landmarks = prediction.landmarks;
 
-      // barmoqlar uchun tsikl
-      for (let i = 0; i < Object.keys(fingerJoints).length; i++) {
-        let finger = Object.keys(fingerJoints)[i]
-        // bog'imlar uchun tsikl
-        for (let j = 0; j < fingerJoints[finger].length - 1; j++) {
-          const firstJointIndex = fingerJoints[finger][j]
-          const secondJointIndex = fingerJoints[finger][j + 1]
+      // Draw finger connections
+      Object.keys(fingerJoints).forEach((finger) => {
+        const joints = fingerJoints[finger];
+        for (let i = 0; i < joints.length - 1; i++) {
+          const [x1, y1] = landmarks[joints[i]];
+          const [x2, y2] = landmarks[joints[i + 1]];
 
-          // draw path
-          ctx.beginPath()
-          ctx.moveTo(
-            landmarks[firstJointIndex][0],
-            landmarks[firstJointIndex][1]
-          )
-          ctx.lineTo(
-            landmarks[secondJointIndex][0],
-            landmarks[secondJointIndex][1]
-          )
-          ctx.strokeStyle = 'aqua'
-          ctx.lineWidth = 4
-          ctx.stroke()
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.strokeStyle = index === 0 ? 'aqua' : 'magenta'; // Different colors for left/right hands
+          ctx.lineWidth = 4;
+          ctx.stroke();
         }
-      }
+      });
 
-      for (let k = 0; k < landmarks.length; k++) {
-        // find x and y points
-        const x = landmarks[k][0]
-        const y = landmarks[k][1]
-
-        // start drawing
-        ctx.beginPath()
-        ctx.arc(x, y, style[k]['size'], 0, 3 * Math.PI)
-
-        // set color
-        ctx.fillStyle = style[k]['color']
-        ctx.fill()
-      }
-    })
+      // Draw landmarks
+      landmarks.forEach((landmark, i) => {
+        const [x, y] = landmark;
+        ctx.beginPath();
+        ctx.arc(x, y, style[i].size, 0, 3 * Math.PI);
+        ctx.fillStyle = style[i].color;
+        ctx.fill();
+      });
+    });
   }
-}
+};
