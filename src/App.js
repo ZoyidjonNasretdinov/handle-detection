@@ -7,7 +7,12 @@ import Webcam from 'react-webcam'
 
 const App = () => {
   return (
-    <div className='App'>App</div>
+    <div className='App'>
+      <header className='App-header'>
+        <Webcam className='webcam' />
+        <canvas className='canvas'/>
+      </header>
+    </div>
   )
 }
 
